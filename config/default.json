@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://mateoghidini1998:mateoghidini1998@devconnector.kugo2fi.mongodb.net/?retryWrites=true&w=majority",
+    "jwtSecret": "secretToken"
+}

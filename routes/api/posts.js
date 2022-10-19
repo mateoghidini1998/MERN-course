@@ -4,7 +4,7 @@ const {check, validationResult} = require('express-validator');
 const auth = require('../../middleware/auth'); 
 const User = require('../../models/User');
 const Post = require('../../models/Post');
-const Profile = require('../../models/Profile');
+const checkObjectId = require('../../middleware/checkObjectId');
 
 //@route   POST api/posts
 //@desc    Create a post
@@ -105,58 +105,54 @@ router.delete('/:id', auth , async (req,res) => {
     }
 });
 
-//@route   PUT api/posts/like/:id
-//@desc    Like a post
-//@access  Private
-
-router.put('/likes/:id', auth , async(req, res) => {
+// @route    PUT api/posts/like/:id
+// @desc     Like a post
+// @access   Private
+router.put('/like/:id', auth, checkObjectId('id'), async (req, res) => {
     try {
-        const post = await Post.findById(req.params.id);
-
-        //Check if the post has been already liked by the user
-        if(post.likes.filter(like => like.user.toString() === req.user.id).length > 0){
-            res.status(400).json({msg: 'Post already liked'});
-        }
-
-        post.likes.unshift({ user: req.user.id });
-
-        await post.save();
-
-        res.json(post.likes);
-
-    } catch (error) {
-        console.error(error.message);
-        res.status(500).send('Server Error');
+      const post = await Post.findById(req.params.id);
+  
+      // Check if the post has already been liked
+      if (post.likes.some((like) => like.user.toString() === req.user.id)) {
+        return res.status(400).json({ msg: 'Post already liked' });
+      }
+  
+      post.likes.unshift({ user: req.user.id });
+  
+      await post.save();
+  
+      return res.json(post.likes);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
     }
-})
-
-//@route   PUT api/posts/unlike/:id
-//@desc    Unlike a post
-//@access  Private
-
-router.put('/unlike/:id', auth , async(req, res) => {
+  });
+  
+  // @route    PUT api/posts/unlike/:id
+  // @desc     Unlike a post
+  // @access   Private
+  router.put('/unlike/:id', auth, checkObjectId('id'), async (req, res) => {
     try {
-        const post = await Post.findById(req.params.id);
-
-        //Check if the post has been already liked by the user
-        if(post.likes.filter(like => like.user.toString() === req.user.id).length === 0){
-            res.status(400).json({msg: 'Post has not yet been liked'});
-        }
-
-        //Get removed index
-        const removeIndex = post.likes.map(like => like.user.toString()).indexOf(req.user.id);
-
-        post.likes.splice(removeIndex, 1);
-
-        await post.save();
-
-        res.json(post.likes);
-
-    } catch (error) {
-        console.error(error.message);
-        res.status(500).send('Server Error');
+      const post = await Post.findById(req.params.id);
+  
+      // Check if the post has not yet been liked
+      if (!post.likes.some((like) => like.user.toString() === req.user.id)) {
+        return res.status(400).json({ msg: 'Post has not yet been liked' });
+      }
+  
+      // remove the like
+      post.likes = post.likes.filter(
+        ({ user }) => user.toString() !== req.user.id
+      );
+  
+      await post.save();
+  
+      return res.json(post.likes);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
     }
-})
+  });
 
 //@route   POST api/posts/comment/:id
 //@desc    Comment a post

@@ -1,7 +1,7 @@
 {
-    "mongoURI": "mongodb+srv://mateoghidini1998:mateoghidini1998@devconnector.kugo2fi.mongodb.net/?retryWrites=true&w=majority",
+    "mongoURI": "mongodb+srv://mateoghidini1998:mateoghidini1998@devconnector.kugo2fi.mongodb.net/",
     "jwtSecret": "secretToken",
     "githubClientId": "3b3c8e9664d19067f8a2",
     "githubSecret": "40f7f464578a50ceece422a2548ac9b89472c0c5",
-    "githubToken": "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"
+    "githubToken": "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"
 }

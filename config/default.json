@@ -1,0 +1,7 @@
+{
+    "mongoURI": "mongodb+srv://mateoghidini1998:mateoghidini1998@devconnector.kugo2fi.mongodb.net/",
+    "jwtSecret": "secretToken",
+    "githubClientId": "3b3c8e9664d19067f8a2",
+    "githubSecret": "40f7f464578a50ceece422a2548ac9b89472c0c5",
+    "githubToken": "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"
+}

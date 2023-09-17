@@ -1,4 +1,4 @@
-import './App.css';
+/* import './App.css'; */
 import { Fragment, useEffect } from 'react'
 import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';

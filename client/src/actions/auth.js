@@ -78,20 +78,25 @@ export const login = (email, password) => async (dispatch) => {
   
       dispatch({
         type: LOGIN_SUCCESS,
-        payload: res.data
+        payload: res.data,
       });
   
       dispatch(loadUSer());
     } catch (err) {
-      const errors = err.response.data.errors;
-  
-      if (errors) {
+      if (err.response && err.response.data && err.response.data.errors) {
+        // Verifica que err.response, err.response.data y err.response.data.errors estén definidos
+        const errors = err.response.data.errors;
         errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      } else if (err.request) {
+        // Error de red, el servidor no respondió
+        console.error('Error de red: El servidor no respondió');
+        dispatch({
+          type: LOGIN_FAIL,
+        });
+      } else {
+        // Otros errores
+        console.error('Error inesperado:', err.message);
       }
-  
-      dispatch({
-        type: LOGIN_FAIL
-      });
     }
   };
 
